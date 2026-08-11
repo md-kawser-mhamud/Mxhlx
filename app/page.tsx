@@ -29,18 +29,7 @@ export default function Home() {
           href="https://mxplex.xyz" 
           className="px-8 py-3 bg-red-600 text-white font-bold rounded-lg hover:bg-red-700 transition text-center shadow-lg"
         >
-          Enter MXPLEX.xyz
-        </a>
-      </div>
-    </main>
-  );
-}
-        </Link>
-        <a 
-          href="https://mxplex.xyz" 
-          className="px-8 py-3 bg-red-600 text-white font-bold rounded-lg hover:bg-red-700 transition text-center shadow-lg"
-        >
-          Enter mxplex.xyz
+          Enter https://mxplex.xyz
         </a>
       </div>
     </main>
