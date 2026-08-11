@@ -17,8 +17,9 @@ export async function generateStaticParams() {
   }
 }
 
-export default async function BlogPost({ params }: { params: { slug: string } }) {
-  const filePath = path.join(process.cwd(), 'posts', `${params.slug}.md`);
+export default async function BlogPost({ params }: { params: Promise<{ slug: string }> }) {
+  const resolvedParams = await params;
+  const filePath = path.join(process.cwd(), 'posts', `${resolvedParams.slug}.md`);
   
   let title = '';
   let contentHtml = '';
