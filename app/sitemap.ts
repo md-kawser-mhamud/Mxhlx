@@ -1,20 +1,38 @@
-import { getBlogPosts } from 'app/blog/utils'
+import { MetadataRoute } from 'next';
+import fs from 'fs';
+import path from 'path';
 
-export const baseUrl = 'https://mxplex.com'
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const baseUrl = 'https://mxplex.com';
+  
+  const postsDirectory = path.join(process.cwd(), 'posts');
+  let blogs: MetadataRoute.Sitemap = [];
 
-export default async function sitemap() {
-  // এটি অটোমেটিক আপনার ব্লগ ফোল্ডার থেকে সব পোস্ট স্ক্যান করবে
-    let blogs = getBlogPosts().map((post) => ({
-        url: `${baseUrl}/blog/${post.slug}`,
-            lastModified: post.metadata.publishedAt,
-              }))
+  try {
+    const filenames = fs.readdirSync(postsDirectory);
+    blogs = filenames.map((file) => ({
+      url: `${baseUrl}/blog/${file.replace(/\.md$/, '')}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    }));
+  } catch (error) {
+    // ফোল্ডার খালি থাকলে এরর দিবে না
+  }
 
-                let routes = ['', '/blog'].map((route) => ({
-                    url: `${baseUrl}${route}`,
-                        lastModified: new Date().toISOString().split('T')[0],
-                          }))
-
-                            // গুগল বটকে আপডেট সাইটম্যাপ দিয়ে দিবে
-                              return [...routes, ...blogs]
-                              }
-                              
+  return [
+    {
+      url: baseUrl,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 1.0,
+    },
+    {
+      url: `${baseUrl}/blog`,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.9,
+    },
+    ...blogs,
+  ];
+}
